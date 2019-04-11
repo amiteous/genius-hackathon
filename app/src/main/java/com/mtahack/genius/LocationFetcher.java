@@ -31,13 +31,20 @@ public class LocationFetcher {
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                 requestCode);
     }
+    @SuppressLint("MissingPermission")
     public String getLocationURL(){
         if (isNeedPermission()){
             return "";
         }
         LocationManager mgr = (LocationManager)ctx.getSystemService(ctx.LOCATION_SERVICE);
-        @SuppressLint("MissingPermission") Location loc  = mgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        String geoUri = "http://maps.google.com/maps?q=loc:" + loc.getLatitude() + "," + loc.getLongitude() + " (" + "my title" + ")";
+        Location loc  = mgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (loc == null){
+            loc = mgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        if (loc == null){
+            return "";
+        }
+        String geoUri = "http://maps.google.com/maps?q=loc:" + loc.getLatitude() + "," + loc.getLongitude();
         return geoUri;
     }
 }

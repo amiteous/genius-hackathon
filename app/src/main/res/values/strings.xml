@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">Genius</string>
+    <string name="app_name">HackApp2</string>
+    <string-array name="time_arrays">
+        <item>30 seconds</item>
+        <item>1 minute</item>
+        <item>2 minutes</item>
+        <item>3 minutes</item>
+        <item>4 minutes</item>
+    </string-array>
+
+    <string name="title_activity_panic">PanicActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

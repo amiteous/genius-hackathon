@@ -1,3 +1,5 @@
+package com.mtahack.genius;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -9,12 +11,12 @@ public class Settings {
     private static Settings instance;
     private static Context ctx;
     private static final String SHARED_PREFS_NAME = "genius";
-    public void init(Context ctx){
+    public static void init(Context ctx){
         Settings.ctx = ctx;
     }
-    public Settings getInstance() throws Exception{
+    public static Settings getInstance() throws Exception{
         if (ctx == null){
-            throw new Exception("Settings not initilized with context, call consider calling init(ctx)");
+            throw new Exception("com.mtahack.genius.Settings not initilized with context, call consider calling init(ctx)");
         }
         if (instance == null){
             instance = new Settings();
@@ -25,6 +27,7 @@ public class Settings {
     public void setSendLocation(boolean value){
         SharedPreferences.Editor editor = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE).edit();
         editor.putBoolean("send_loc", value);
+        editor.commit();
     }
     public boolean getSendLoaction(){
         SharedPreferences shared = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE);
@@ -35,6 +38,7 @@ public class Settings {
         Set<String> phoneSet = new HashSet<String>(Arrays.asList(phones));
         SharedPreferences.Editor editor = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE).edit();
         editor.putStringSet("emergency_phones", phoneSet);
+        editor.commit();
     }
 
     public String[] getContactsToText(){
@@ -47,6 +51,7 @@ public class Settings {
     public void setAlaramTimeInSeconds(int alarmTime){
         SharedPreferences.Editor editor = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE).edit();
         editor.putInt("alarm_time", alarmTime);
+        editor.commit();
     }
     
     public int getAlarmTimeInSeconds(){

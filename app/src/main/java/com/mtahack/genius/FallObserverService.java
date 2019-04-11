@@ -15,10 +15,12 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class FallObserverService extends BackgroundService {
 
     private PowerManager.WakeLock wakeLock;
-
+    private long lastFall;
     public void onCreate(){
         super.onCreate();
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
@@ -39,7 +41,16 @@ public class FallObserverService extends BackgroundService {
         FallNotificator.getInstance().setFallListener(new Runnable() {
             @Override
             public void run() {
+                if (System.currentTimeMillis() - lastFall < 1000){
+                    return;
+                }
+                lastFall = System.currentTimeMillis();
+                Log.d("genius", "fall detected");
                 notification("Ouch!","fall detected!",FallObserverService.this);
+                Intent intent = new Intent();
+                intent.setClass(FallObserverService.this, PanicActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
         FallNotificator.getInstance().startMeasuring(this);

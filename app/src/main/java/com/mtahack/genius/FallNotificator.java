@@ -57,7 +57,7 @@ public class FallNotificator implements SensorEventListener {
         double diff = Math.abs(total_acc - pastAcceleration[0]);
         //Log.d("Genius", "Acceleration is: "+ String.valueOf(diff));
         if (diff > peak){
-            Log.d("genius", "peak_count: " + peak_count);
+            //Log.d("genius", "peak_count: " + peak_count);
             peak_count += 1;
         }else{
             peak_count = 0;
