@@ -18,6 +18,6 @@
         android:id="@+id/listview_contacts"
         android:layout_width="395dp"
         android:layout_height="295dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="340dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
 </android.support.constraint.ConstraintLayout>
