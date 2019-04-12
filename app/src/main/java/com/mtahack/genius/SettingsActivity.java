@@ -55,8 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                //TODO: fill that up once the manage contacts is on
-                //intent.setClass()
+                intent.setClass(SettingsActivity.this,ContactsSettingsActivity.class);
                 startActivity(intent);
             }
         });
