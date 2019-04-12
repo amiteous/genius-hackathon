@@ -12,6 +12,8 @@ public class FallNotificator implements SensorEventListener {
     private static double[] pastAcceleration;
     private static double peak = 2;
     private static int peak_count = 0;
+    private static long last_event = 0;
+    private static boolean isFreeFalling = false;
     private static Runnable fall_listener;
 
     public static FallNotificator getInstance(){
@@ -54,24 +56,44 @@ public class FallNotificator implements SensorEventListener {
         if (pastAcceleration[0] == 0){
             pastAcceleration[0] = total_acc;
         }
+
+        if (System.currentTimeMillis() - last_event < 200){
+            return;
+        }
+        last_event = System.currentTimeMillis();
+
         double diff = Math.abs(total_acc - pastAcceleration[0]);
-        //Log.d("Genius", "Acceleration is: "+ String.valueOf(diff));
-        if (diff > peak){
-            //Log.d("genius", "peak_count: " + peak_count);
-            peak_count += 1;
-        }else{
-            peak_count = 0;
-        }
-        if (peak_count >= 6){
-            //Log.d("Genius", "You fell! " + total_acc + " " + pastAcceleration[0]);
-            if (fall_listener != null){
-                fall_listener.run();
+        Log.d("Genius", "Acceleration is: "+ String.valueOf(total_acc));
+        if (total_acc < 3){
+            isFreeFalling = true;
+        }else {
+            if (total_acc > 10 && isFreeFalling) {
+                Log.d("genius", "youfell");
+                if (fall_listener != null) {
+                    fall_listener.run();
+//            }
+                }
+                isFreeFalling = false;
             }
-            peak_count = 0;
+//
+//        if (diff > peak){
+//            //Log.d("genius", "peak_count: " + peak_count);
+//            peak_count += 1;
+//        }else{
+//            peak_count = 0;
+//        }
+//        if (peak_count >= 4){
+//            //Log.d("Genius", "You fell! " + total_acc + " " + pastAcceleration[0]);
+//            if (fall_listener != null){
+//                fall_listener.run();
+//            }
+//            peak_count = 0;
+//        }
+//        pastAcceleration[0] = total_acc;
         }
-        pastAcceleration[0] = total_acc;
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 }

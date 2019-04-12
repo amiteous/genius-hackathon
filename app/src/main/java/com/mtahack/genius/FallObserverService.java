@@ -41,7 +41,7 @@ public class FallObserverService extends BackgroundService {
         FallNotificator.getInstance().setFallListener(new Runnable() {
             @Override
             public void run() {
-                if (System.currentTimeMillis() - lastFall < 1000){
+                if (System.currentTimeMillis() - lastFall < 2000){
                     return;
                 }
                 lastFall = System.currentTimeMillis();
