@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/button_addContact"
+        android:layout_width="128dp"
+        android:layout_height="120dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        app:srcCompat="@drawable/pers_cont2" />
+
+    <ListView
+        android:id="@+id/listview_Contacts"
+        android:layout_width="match_parent"
+        android:layout_height="430dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="301dp"
+        android:divider="#d3d3d3"
+        android:dividerHeight="1dp"
+        android:listSelector="#8D859692" />
+
+    <TextView
+        android:id="@+id/textView_ToDisplay"
+        android:layout_width="269dp"
+        android:layout_height="89dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="73dp"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="69dp"
+        android:text=""
+        android:textSize="45px" />
+
+</RelativeLayout>

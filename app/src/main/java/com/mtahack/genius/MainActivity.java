@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         final SmsSender sms = new SmsSender(MainActivity.this);
+        final ContactsSettingsActivity contacts = new ContactsSettingsActivity();
+        ContactsSettingsActivity.isNeedPermission(MainActivity.this);
         if (sms.isNeedPermission()) {
             sms.requestPermission(MainActivity.this, SMS_REQ);
             //return;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                                                   locate.requestPermission(MainActivity.this,LOCATION_REQ);
                                               }
                                               Log.d("genius", locate.getLocationURL());
-                                              sendEmergencyCall(new String[] {"0542368516","0548306906"},"Emergency. GPS: "+locate.getLocationURL());
+                                              sendEmergencyCall(contacts.getM_ContactsPhoneNumbers().toArray(new String[contacts.getM_ContactsPhoneNumbers().size()]),"Emergency. GPS: "+locate.getLocationURL());
                                           }
                                       });
 
