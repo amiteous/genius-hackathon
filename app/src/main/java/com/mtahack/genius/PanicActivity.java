@@ -43,7 +43,7 @@ public class PanicActivity extends AppCompatActivity {
                 if (settings.getSendLoaction()){
                     url = new LocationFetcher(PanicActivity.this).getLocationURL();
                 }
-                // sender.sendSms(settings.getContactsToText(), "Emergeny SMS: " + url);
+                sender.sendSms(settings.getContactsToText(), "Emergeny SMS: " + url);
                 Log.d("genius", "send sms!!");
                 mp.stop();
             }

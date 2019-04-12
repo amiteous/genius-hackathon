@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
+import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 
 public class SmsSender {
@@ -14,10 +16,11 @@ public class SmsSender {
     public SmsSender(Context ctx){
         this.ctx = ctx;
     }
-    public void sendSms(String phones[], String message){
+    public void sendSms(Pair<String,String>[] contacts, String message){
         SmsManager mgr = (SmsManager) SmsManager.getDefault();
-        for (String phone: phones) {
-            mgr.sendTextMessage(phone, null, message, null, null);
+        for (Pair<String, String> contact : contacts) {
+            Log.d("genius", "texting " + contact.second);
+            mgr.sendTextMessage(contact.second, null, message, null, null);
         }
     }
     public void requestPermission(Activity activity, int requestCode){

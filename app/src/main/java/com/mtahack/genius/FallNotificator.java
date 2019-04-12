@@ -63,7 +63,7 @@ public class FallNotificator implements SensorEventListener {
         last_event = System.currentTimeMillis();
 
         double diff = Math.abs(total_acc - pastAcceleration[0]);
-        Log.d("Genius", "Acceleration is: "+ String.valueOf(total_acc));
+        //Log.d("Genius", "Acceleration is: "+ String.valueOf(total_acc));
         if (total_acc < 3){
             isFreeFalling = true;
         }else {

@@ -2,9 +2,14 @@ package com.mtahack.genius;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.util.Pair;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Settings {
@@ -34,19 +39,30 @@ public class Settings {
         return shared.getBoolean("send_loc", true);
     }
 
-    public void setContanctsToText(String[] phones){
+    public void setContanctsToText(Pair<String,String>[] contacts){
+        String[] phones = new String[contacts.length];
+        for (int i = 0; i < contacts.length; i++){
+            phones[i] = contacts[i].first + "," + contacts[i].second;
+        }
         Set<String> phoneSet = new HashSet<String>(Arrays.asList(phones));
         SharedPreferences.Editor editor = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE).edit();
         editor.putStringSet("emergency_phones", phoneSet);
         editor.commit();
     }
 
-    public String[] getContactsToText(){
+    public Pair<String,String>[] getContactsToText(){
         SharedPreferences shared = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE);
         Set<String> phones = shared.getStringSet("emergency_phones", new HashSet<String>());
         String[] result = new String[phones.size()];
         result = phones.toArray(result);
-        return result;
+        ArrayList<Pair<String,String>> contacts = new ArrayList<Pair<String, String>>();
+        for (String contact: result){
+            String display = contact.substring(0, contact.indexOf(","));
+            String phone = contact.substring(contact.indexOf(",") + 1, contact.length());
+            Log.d("genius", contact + "," + display + "," + phone);
+            contacts.add(new Pair<String, String>(display, phone));
+        }
+        return contacts.toArray(new Pair[contacts.size()]);
     }
     public void setAlaramTimeInSeconds(int alarmTime){
         SharedPreferences.Editor editor = ctx.getSharedPreferences(SHARED_PREFS_NAME, ctx.MODE_PRIVATE).edit();

@@ -12,9 +12,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import java.util.Set;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -59,7 +62,11 @@ public class MainActivity extends AppCompatActivity {
                                                   locate.requestPermission(MainActivity.this,LOCATION_REQ);
                                               }
                                               Log.d("genius", locate.getLocationURL());
-                                              sendEmergencyCall(contacts.getM_ContactsPhoneNumbers().toArray(new String[contacts.getM_ContactsPhoneNumbers().size()]),"Emergency. GPS: "+locate.getLocationURL());
+                                              Settings settings = null;
+                                              try{
+                                                  settings = Settings.getInstance();
+                                              } catch (Exception e){}
+                                              sendEmergencyCall(settings.getContactsToText(),"Emergency. GPS: "+locate.getLocationURL());
                                           }
                                       });
 
@@ -106,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
         //Settings.getInstance().getContactsToText()
     }
 
-    public void sendEmergencyCall(String[] phones,String message){
+    public void sendEmergencyCall(Pair<String,String>[] contacts, String message){
         SmsSender smsSend = new SmsSender(MainActivity.this);
-        smsSend.sendSms(phones, message);
+        smsSend.sendSms(contacts, message);
     }
 
     public Location getLastKnownLocation(Context ctx){
@@ -137,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (requestCode == SMS_REQ){
+            final LocationFetcher locate = new LocationFetcher(MainActivity.this);
+            if (locate.isNeedPermission()){
+                locate.requestPermission(MainActivity.this, LOCATION_REQ);
+            }
             onSMSgranted();
         }
         if (requestCode == LOCATION_REQ){

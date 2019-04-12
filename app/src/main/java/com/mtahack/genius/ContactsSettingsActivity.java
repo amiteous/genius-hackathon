@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -29,8 +30,10 @@ import com.wafflecopter.multicontactpicker.LimitColumn;
 import com.wafflecopter.multicontactpicker.MultiContactPicker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ContactsSettingsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private List<String> m_ContactsPhoneNumbers;
@@ -43,6 +46,7 @@ public class ContactsSettingsActivity extends AppCompatActivity implements Adapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Settings.init(ContactsSettingsActivity.this);
         setContentView(R.layout.activity_contacts_settings);
         contactsListView = (ListView) findViewById(R.id.listview_Contacts);
         buttonAddContact = (ImageButton) findViewById(R.id.button_addContact);
@@ -71,10 +75,16 @@ public class ContactsSettingsActivity extends AppCompatActivity implements Adapt
     }
 
     public Map<String,?> getContacts() {
-        SharedPreferences contactsSharedPref = this.getSharedPreferences(CONTACTS_PREFS, MODE_PRIVATE);
-        Map<String, ?> allContacts = contactsSharedPref.getAll();
-        m_ContactsMap = allContacts;
-        return allContacts;
+        Pair<String,String>[] contacts = null;
+        try{
+            contacts = Settings.getInstance().getContactsToText();
+        } catch (Exception e) {e.printStackTrace();}
+        Map<String, String> data = new HashMap<String,String>();
+        for (Pair<String,String> contact : contacts){
+            data.put(contact.first, contact.second);
+        }
+        m_ContactsMap = data;
+        return data;
     }
 
 
@@ -122,21 +132,15 @@ public class ContactsSettingsActivity extends AppCompatActivity implements Adapt
                 .showPickerForResult(REQUEST_CODE);
     }
 
-
-    public void addContact(String i_ContactName, String i_ContactNumber) {
-        SharedPreferences.Editor editor = this.getSharedPreferences(CONTACTS_PREFS, MODE_PRIVATE).edit();
-        String phoneNumber = i_ContactNumber.replaceAll("[\\(\\)\\-]", "");
-        editor.putString(i_ContactName, phoneNumber);
-        editor.apply();
-    }
-
     public void removeContact(String i_ContactName) {
         m_ContactsMap.remove(i_ContactName);
-        SharedPreferences.Editor editor = this.getSharedPreferences(CONTACTS_PREFS, MODE_PRIVATE).edit();
-        editor.remove(i_ContactName);
-        editor.apply();
-
-
+        ArrayList<Pair<String,String>> str = new ArrayList<>();
+        for (Map.Entry<String, ?> entry : m_ContactsMap.entrySet()) {
+            str.add(new Pair<String, String>(entry.getKey(), (String)entry.getValue()));
+        }
+        try{
+            Settings.getInstance().setContanctsToText(str.toArray(new Pair[str.size()]));
+        } catch (Exception e) {}
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -144,9 +148,13 @@ public class ContactsSettingsActivity extends AppCompatActivity implements Adapt
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 List<ContactResult> results = MultiContactPicker.obtainResult(data);
+                ArrayList<Pair<String,String>> lst = new ArrayList<Pair<String, String>>();
                 for (ContactResult contact : results) {
-                    addContact(contact.getDisplayName(), contact.getPhoneNumbers().get(0).getNumber());
+                    lst.add(new Pair<String, String>(contact.getDisplayName(), contact.getPhoneNumbers().get(0).getNumber()));
                 }
+                try{
+                    Settings.getInstance().setContanctsToText(lst.toArray(new Pair[lst.size()]));
+                } catch (Exception e) {e.printStackTrace();}
                 fillListViewWithContacts();
                 Log.d("MyTag", results.get(0).getDisplayName());
             } else if (resultCode == RESULT_CANCELED) {
